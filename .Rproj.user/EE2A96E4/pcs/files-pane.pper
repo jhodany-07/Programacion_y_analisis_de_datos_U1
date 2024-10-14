@@ -1,9 +1,13 @@
 {
     "sortOrder": [
         {
-            "columnIndex": 2,
+            "columnIndex": 1,
             "ascending": true
+        },
+        {
+            "columnIndex": 2,
+            "ascending": false
         }
     ],
-    "path": "D:/VIII CICLO/Analisis y programación de datos/Programacion_analisis_de_datos_U1/Data"
+    "path": "D:/VIII CICLO/Analisis y programación de datos/Programacion_analisis_de_datos_U1"
 }
