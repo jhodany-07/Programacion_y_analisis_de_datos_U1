@@ -1,0 +1,54 @@
+---
+title: "Programacion"
+author: "Jhodany Parejas Gonzales"
+format:
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+---
+
+# ¿Qué es programación?
+
+En el contexto de la informática, la programación se ha convertido progresivamente en una poderosa herramienta porque impulsa la innovación, mejora la eficiencia y resuelve problemas (como la automatización, el análisis de datos y el desarrollo de software), creando oportunidades laborales y transformando la manera en que vivimos, trabajamos y nos comunicamos en la era digital que vivimos actualmente. Profundicemos en este término para comprender con mayor claridad de qué trata.
+
+# ¿Qué es un lenguaje de programación?
+
+Se trata de un conjunto de reglas y símbolos que permiten a los programadores escribir instrucciones que un computador puede comprender y ejecutar. Estos lenguajes actúan como intermediarios entre el lenguaje humano, que utilizamos para comunicarnos, y el lenguaje de la máquina, que es el conjunto de instrucciones binarias que una computadora entiende directamente.
+
+# Lenguaje de programación: ejemplos
+
+Entre los lenguajes de programación más utilizados se destacan:
+
+## Lenguaje de programación Python.
+
+Está caracterizado por una sintaxis simple y legible. Es ampliamente usado en una variedad de aplicaciones, desde desarrollo web hasta análisis de datos y aprendizaje automático.
+
+## Lenguaje de programación Java
+
+Es utilizado en una diversidad de aplicaciones, desde app móviles (Android) hasta desarrollo empresarial y sistemas embebidos (sistema integrado).
+
+## Lenguaje de programación Ruby.
+
+Conocido por su orientación a la simplicidad y la elegancia, es utilizado en desarrollo web (con el framework Ruby on Rails) y en scripting. \## Lenguaje de programación Swift. Es un lenguaje desarrollado por Apple para crear aplicaciones en los ecosistemas iOS, macOS y otros sistemas de la empresa.
+
+# Tipos de datos en programación
+
+Se refiere al conjunto de valores que poseen una cualidad en común, los cuales reaccionan a unas operaciones específicas. Dado que en un sistema informático se trabaja con datos, los lenguajes de programación requieren conocer qué tipo de dato es, así identifica los posibles valores que podrían tener y las cosas que se admiten hacer con ellos. Entre los tipos de datos que suelen encontrarse en varios lenguajes de programación están:
+
+-   **Enteros**, representando números enteros sin decimales. Dichos números pueden ser positivo o negativo. Ejemplos: -7, 0, 38.
+
+- **Número con decimales**, también conocido como "punto flotante". Por ejemplo: 8.23, -0.7, 9.0
+
+- **Carácter**, simboliza un único elemento. Ejemplo: "D", "7", "\#"
+
+- **Cadena de caracteres**, se refiere a una secuencia de caracteres. Por Ejemplo: "Hola, mundo!"
+
+- **Boleano**, supone un valor verdadero (true) o falso (false). Utilizado en operaciones de lógica y control de flujo.
+
+- **Lista**, representando una colección ordenada de elementos. Pueden contener componentes de diferentes tipos.
+
+- **Arreglo (*array*)**, hace referencia a la colección de elementos del mismo tipo, indexados por números enteros. Por ejemplo: \[1, 2, 3\].
+
+- **Clase**, es el tipo de dato compuesto en la programación orientada a objetos.
