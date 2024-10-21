@@ -91,8 +91,18 @@ ggplot(fb, aes(x = geno, y = lfa, colour = riego)) +
 theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Inclinar etiquetas del eje X
 
+# Comparación de medias  --------------------------------------------------
+library(agricolae)
+tukey_result <- HSD.test(modelo, "riego", group=TRUE)
+print(tukey_result)
+plot(tukey_result)
+tukey_result <- HSD.test(modelo, "geno", group=TRUE)
+print(tukey_result)
+tukey_result <- HSD.test(modelo, c("riego", "geno"), group=TRUE)
+print(tukey_result)
+plot(tukey_result)
+str(tukey_result)
+tukey_result
 
-
-
-
-
+grupos <- tukey_result$groups %>% rowid_to_column()
+str(grupos)
