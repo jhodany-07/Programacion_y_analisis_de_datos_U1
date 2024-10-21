@@ -53,3 +53,46 @@ Se refiere al conjunto de valores que poseen una cualidad en común, los cuales 
 - **Arreglo (*array*)**, hace referencia a la colección de elementos del mismo tipo, indexados por números enteros. Por ejemplo: \[1, 2, 3\].
 
 - **Clase**, es el tipo de dato compuesto en la programación orientada a objetos.
+
+library(inti)
+library(googlesheets4)
+url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=1263018298#gid=1263018298"
+gs <- as_sheets_id(url)
+fb <- googlesheets4::range_read(ss = gs,sheet = "fb")
+gs <- dtxlsx%>% 
+  as_sheets_id(fb)
+
+fb <- gs %>% 
+  range_read("fb")
+
+
+str(fb)
+
+## Modelo lineal (ANOVA) 
+
+```{r}
+modelo <- aov(formula = lfa ~  bloque + riego + geno + riego*geno
+              , data = fb)
+
+anova(modelo)
+
+plot(modelo)
+```
+
+### boxplot
+
+```{r}
+
+ggplot(fb, aes(x = geno, y = lfa, colour = riego)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
+  labs(title = "Boxplot con interacción de niveles de riego y genotipo",
+       x = "Interacción Riego y Genotipo",
+       y = "Area Foliar (cm^2)")
+theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Inclinar etiquetas del eje X
+
+
+
+
+
+
