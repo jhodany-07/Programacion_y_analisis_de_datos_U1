@@ -1,0 +1,211 @@
+---
+title: "Análisis de Datos"
+author: "Parejas_G_Jhodany"
+format: html
+editor: visual
+html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+    output-file: index
+---
+
+# ANALISIS DE DATOS 
+## Importar datos 
+```{r}
+library(inti)
+library(googlesheets4)
+library(ggplot2)
+
+url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=172957346#gid=172957346"
+
+gs <- as_sheets_id(url)
+
+fb <- googlesheets4::range_read(ss = gs, sheet = "fb")
+```
+# Modelo Lineal (ANOVA)
+```{r}
+modelo <- aov(formula = lfa ~ bloque + riego + geno + riego*geno , data = fb) 
+anova(modelo) 
+```
+
+```{r}
+plot(modelo)
+```
+##Boxplot
+```{r}
+ggplot(fb, aes(x = geno , y = lfa, colour = riego)) + geom_boxplot(outlier.colour = "red",outlier.shape = 16, outlier.size = 2) + labs(title = "Boxplot con interacción de niveles de riego y genotipo", x = "interacción Riego y Genotipo", y = "Area Foliar (cm^2)") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+# MODELO LINEAL MIXTO
+```{r}
+library(lme4)
+model <- lmer(formula = lfa ~ riego + geno + riego*geno + (1 | bloque), data = fb)
+
+anova(model)
+```
+```{r}
+plot(model)
+```
+```{r}
+ol <- boxplot(lfa ~  riego*geno , fb)
+```
+```{r}
+ol
+```
+## Remover los outliers
+```{r}
+remove_outliers(data = fb, formula = lfa ~ riego + geno + riego*geno + (1 | bloque), plot_diag = T)
+```
+## Comparación de medias 
+```{r}
+modeloo <- lm(formula = lfa ~ bloque + riego + geno + riego*geno
+          , data = fb)
+
+anova(modeloo)
+```
+## Prueba de Tukey 
+```{r}
+library(agricolae)
+
+tukey_result <- HSD.test(modeloo, c("geno", "riego"), group = TRUE)
+
+tukey_result
+```
+```{r}
+print(tukey_result)
+```
+
+```{r}
+plot(tukey_result)
+```
+```{r}
+grupos <- tukey_result$groups %>% 
+  rownames_to_column("tratamientos") %>% 
+  separate(tratamientos, into= c("geno","riego"), sep = ":")
+
+str(grupos)
+```
+```{r}
+ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = "skyblue") + geom_text(aes(label = groups), position = position_dodge(width = 0.9), vjust = -0.5) +  # Aquí se añaden las etiquetas de 'groups' encima de las barras
+  labs(x = "Genotipo", y = "lfa", fill=("Riego")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("Gráfico de barras: LFA por genotipo y riego")
+```
+
+## emeans comparación de medias
+```{r}
+library(emmeans)
+library(multcomp)
+
+models <- lmer(formula = lfa ~ (1 | bloque) + riego*geno, data = fb)
+
+anova(models)
+```
+```{r}
+cm1 <- emmeans(models, ~ geno | riego) %>% 
+  cld(Letters = letters, reversed = T)
+
+cm1
+```
+```{r}
+cm2 <- emmeans(models, ~ riego | geno) %>% 
+  cld(Letters = letters, reversed = T)
+
+cm2
+```
+```{r}
+cm3 <- emmeans(models, ~ riego * geno) %>% 
+  cld(Letters = letters, reversed = T)
+
+cm3
+```
+
+## Gráfico geno | riego
+```{r}
+cm1_df <- as.data.frame(cm1) %>% 
+  rename(sig = ".group")
+
+ggplot(cm1_df, aes(x = geno, y = emmean, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = "skyblue") +
+  geom_text(aes(label = sig, y = emmean), position = position_dodge(width = 0.9), vjust = -0.5) +
+  labs(x = "Genotipo", y = "Media estimada (emmeans)", fill = "Riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Gráfico de medias estimadas por genotipo y riego")
+```
+## Gráfico riego | geno
+```{r}
+cm2_df <- as.data.frame(cm2) %>% 
+  rename(sig = ".group")
+
+ggplot(cm2_df, aes(x = geno, y = emmean, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = "skyblue") +
+  geom_text(aes(label = sig, y = emmean), position = position_dodge(width = 0.9), vjust = -0.5) +
+  labs(x = "Genotipo", y = "Media estimada (emmeans)", fill = "Riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Gráfico de medias estimadas por genotipo y riego")
+```
+## Gráfico geno * riego
+```{r}
+cm3_df <- as.data.frame(cm3) %>% 
+  rename(sig = ".group")
+
+ggplot(cm3_df, aes(x = geno, y = emmean, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = "skyblue") +
+  geom_text(aes(label = sig, y = emmean), position = position_dodge(width = 0.9), vjust = -0.5) +
+  labs(x = "Genotipo", y = "Media estimada (emmeans)", fill = "Riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Gráfico de medias estimadas por genotipo y riego")
+```
+# ANÁLISIS MULTIVARIADO 
+## Correlación
+### Selecciona solo las columnas numéricas para evitar errores
+```{r}
+numeric_data <- fb[, sapply(fb,is.numeric)]
+
+cor_matrix <- cor(numeric_data)
+```
+### Ver la matriz de correlación
+```{r}
+print(cor_matrix)
+```
+## Visualización de la matriz de evaluación
+```{r}
+library(psych)
+fb %>% 
+  select_if(is.numeric) %>% 
+  dplyr::select(!c("block")) %>% 
+  pairs.panels(x = .
+               , hist.col = "red"
+               , pch = 21
+               , stars = TRUE
+               , scale = TRUE
+               ,lm = TRUE
+               )
+```
+## Análisis de Componentes Principales (PCA)
+```{r}
+library(dplyr)
+library(FactoMineR)
+library(cowplot)
+mv <- fb %>% 
+  group_by(riego, geno) %>% 
+  summarise(across(where(is.numeric), ~ mean(., na.rm = TRUE))) %>% 
+  PCA(scale.unit = T, quali.sup = c(1:4), graph = F)
+
+p1 <- plot (mv
+     , choix="ind"
+     , habillage=1)
+
+p2 <- plot (mv
+     , choix="var")
+
+list(p1, p2) %>% 
+  plot_grid(plotlist = ., nrow = 1)
+
+```
+

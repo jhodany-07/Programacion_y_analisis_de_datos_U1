@@ -3000,8 +3000,12 @@ vertical-align: -.125em;
   </ul></li>
   <li><a href="#tipos-de-datos-en-programación" id="toc-tipos-de-datos-en-programación" class="nav-link" data-scroll-target="#tipos-de-datos-en-programación"><span class="header-section-number">4</span> Tipos de datos en programación</a>
   <ul class="collapse">
-  <li><a href="#modelo-lineal-anova" id="toc-modelo-lineal-anova" class="nav-link" data-scroll-target="#modelo-lineal-anova"><span class="header-section-number">4.1</span> Modelo lineal (ANOVA)</a></li>
+  <li><a href="#modelo-lineal-anova" id="toc-modelo-lineal-anova" class="nav-link" data-scroll-target="#modelo-lineal-anova"><span class="header-section-number">4.1</span> Modelo lineal (ANOVA)</a>
+  <ul class="collapse">
+  <li><a href="#boxplot" id="toc-boxplot" class="nav-link" data-scroll-target="#boxplot"><span class="header-section-number">4.1.1</span> boxplot</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#comparación-de-medias" id="toc-comparación-de-medias" class="nav-link" data-scroll-target="#comparación-de-medias"><span class="header-section-number">5</span> Comparación de medias ————————————————–</a></li>
   </ul>
 </nav>
 </div>
@@ -3069,11 +3073,25 @@ vertical-align: -.125em;
 <li><p><strong>Arreglo (<em>array</em>)</strong>, hace referencia a la colección de elementos del mismo tipo, indexados por números enteros. Por ejemplo: [1, 2, 3].</p></li>
 <li><p><strong>Clase</strong>, es el tipo de dato compuesto en la programación orientada a objetos.</p></li>
 </ul>
-<p>library(openxlsx) dtxlsx &lt;- openxlsx::read.xlsx(xlsxFile = “Data/LA MOLINA 2014 POTATO WUE (FB).xlsx”,sheet = “fb”) fb =</p>
+<p>library(inti) library(googlesheets4) url &lt;- “https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=1263018298#gid=1263018298” gs &lt;- as_sheets_id(url)</p>
+<p>fb &lt;- googlesheets4::range_read(ss = gs,sheet = “fb”) gs &lt;- dtxlsx%&gt;% as_sheets_id(fb)</p>
+<p>fb &lt;- gs %&gt;% range_read(“fb”)</p>
+<p>str(fb)</p>
 <section id="modelo-lineal-anova" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="modelo-lineal-anova"><span class="header-section-number">4.1</span> Modelo lineal (ANOVA)</h2>
-<p>av &lt;- aov()</p>
+<p>{r} modelo &lt;- aov(formula = lfa ~ bloque + riego + geno + riego*geno , data = fb) anova(modelo) plot(modelo)</p>
+<p>```{r} modelo &lt;- aov(formula = lfa ~ bloque + riego + geno + riego*geno , data = fb) anova(modelo) plot(modelo)</p>
+<section id="boxplot" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="boxplot"><span class="header-section-number">4.1.1</span> boxplot</h3>
+<p>```{r}</p>
+<p>ggplot(fb, aes(x = geno, y = lfa, colour = riego)) + geom_boxplot(outlier.colour = “red”, outlier.shape = 16, outlier.size = 2) + labs(title = “Boxplot con interacción de niveles de riego y genotipo”, x = “Interacción Riego y Genotipo”, y = “Area Foliar (cm^2)”) theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Inclinar etiquetas del eje X</p>
 </section>
+</section>
+</section>
+<section id="comparación-de-medias" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Comparación de medias ————————————————–</h1>
+<p>library(agricolae) tukey_result &lt;- HSD.test(modelo, “riego”, group=TRUE) print(tukey_result) plot(tukey_result) tukey_result &lt;- HSD.test(modelo, “geno”, group=TRUE) print(tukey_result) tukey_result &lt;- HSD.test(modelo, c(“riego”, “geno”), group=TRUE) print(tukey_result) plot(tukey_result) str(tukey_result) tukey_result</p>
+<p>grupos &lt;- tukey_result str(grupos) library(ggplot2) library(ggplot) grupos &lt;- tukey_result$groups %&gt;% rownames_to_column(“tratamientos”) %&gt;% separate(tratamientos, into = c(“geno”,“riego”),sep = “:”) str(grupos) ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) + geom_bar(stat = “identity”, position = “dodge”, color =“black”) + labs (x = “Genotipo”, y = “LFA”, fi11 = “Riego”) + theme_minimal()+ theme (axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle(“Gráfico de barras: LFA por genotipo y riego”)</p>
 </section>
 
 </main>

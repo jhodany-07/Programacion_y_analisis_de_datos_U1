@@ -40,81 +40,45 @@ Se refiere al conjunto de valores que poseen una cualidad en común, los cuales 
 
 -   **Enteros**, representando números enteros sin decimales. Dichos números pueden ser positivo o negativo. Ejemplos: -7, 0, 38.
 
-- **Número con decimales**, también conocido como "punto flotante". Por ejemplo: 8.23, -0.7, 9.0
+-   **Número con decimales**, también conocido como "punto flotante". Por ejemplo: 8.23, -0.7, 9.0
 
-- **Carácter**, simboliza un único elemento. Ejemplo: "D", "7", "\#"
+-   **Carácter**, simboliza un único elemento. Ejemplo: "D", "7", "\#"
 
-- **Cadena de caracteres**, se refiere a una secuencia de caracteres. Por Ejemplo: "Hola, mundo!"
+-   **Cadena de caracteres**, se refiere a una secuencia de caracteres. Por Ejemplo: "Hola, mundo!"
 
-- **Boleano**, supone un valor verdadero (true) o falso (false). Utilizado en operaciones de lógica y control de flujo.
+-   **Boleano**, supone un valor verdadero (true) o falso (false). Utilizado en operaciones de lógica y control de flujo.
 
-- **Lista**, representando una colección ordenada de elementos. Pueden contener componentes de diferentes tipos.
+-   **Lista**, representando una colección ordenada de elementos. Pueden contener componentes de diferentes tipos.
 
-- **Arreglo (*array*)**, hace referencia a la colección de elementos del mismo tipo, indexados por números enteros. Por ejemplo: \[1, 2, 3\].
+-   **Arreglo (*array*)**, hace referencia a la colección de elementos del mismo tipo, indexados por números enteros. Por ejemplo: \[1, 2, 3\].
 
-- **Clase**, es el tipo de dato compuesto en la programación orientada a objetos.
+-   **Clase**, es el tipo de dato compuesto en la programación orientada a objetos.
 
-library(inti)
-library(googlesheets4)
-url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=1263018298#gid=1263018298"
-gs <- as_sheets_id(url)
+library(inti) library(googlesheets4) url \<- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=1263018298#gid=1263018298" gs \<- as_sheets_id(url)
 
-fb <- googlesheets4::range_read(ss = gs,sheet = "fb")
-gs <- dtxlsx%>% 
-  as_sheets_id(fb)
+fb \<- googlesheets4::range_read(ss = gs,sheet = "fb") gs \<- dtxlsx%\>% as_sheets_id(fb)
 
-fb <- gs %>% 
-  range_read("fb")
-
+fb \<- gs %\>% range_read("fb")
 
 str(fb)
 
-## Modelo lineal (ANOVA) 
-```{r}
-modelo <- aov(formula = lfa ~  bloque + riego + geno + riego*geno
-              , data = fb)
-anova(modelo)
-plot(modelo)
+## Modelo lineal (ANOVA)
 
-```{r}
-modelo <- aov(formula = lfa ~  bloque + riego + geno + riego*geno
-              , data = fb)
-anova(modelo)
-plot(modelo)
+\{r} 
+modelo \<- aov(formula = lfa \~ bloque + riego + geno + riego\*geno , data = fb) anova(modelo) plot(modelo)
+
+\`\`\`{r} 
+modelo \<- aov(formula = lfa \~ bloque + riego + geno + riego\*geno , data = fb) anova(modelo) plot(modelo)
 
 ### boxplot
 
-```{r}
+\`\`\`{r}
 
-ggplot(fb, aes(x = geno, y = lfa, colour = riego)) +
-  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
-  labs(title = "Boxplot con interacción de niveles de riego y genotipo",
-       x = "Interacción Riego y Genotipo",
-       y = "Area Foliar (cm^2)")
-theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Inclinar etiquetas del eje X
+ggplot(fb, aes(x = geno, y = lfa, colour = riego)) + geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) + labs(title = "Boxplot con interacción de niveles de riego y genotipo", x = "Interacción Riego y Genotipo", y = "Area Foliar (cm\^2)") theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) \# Inclinar etiquetas del eje X
 
-# Comparación de medias  --------------------------------------------------
-library(agricolae)
-tukey_result <- HSD.test(modelo, "riego", group=TRUE)
-print(tukey_result)
-plot(tukey_result)
-tukey_result <- HSD.test(modelo, "geno", group=TRUE)
-print(tukey_result)
-tukey_result <- HSD.test(modelo, c("riego", "geno"), group=TRUE)
-print(tukey_result)
-plot(tukey_result)
-str(tukey_result)
-tukey_result
+# Comparación de medias --------------------------------------------------
 
-grupos <- tukey_result
-str(grupos)
-library(ggplot2)
-library(ggplot)
-grupos <- tukey_result$groups %>% rownames_to_column("tratamientos") %>% separate(tratamientos, into = c("geno","riego"),sep = ":")
-str(grupos)
-ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) + geom_bar(stat = "identity", position = "dodge", color ="black") +
-  labs (x = "Genotipo", y = "LFA", fi11 = "Riego") +
-  theme_minimal()+
-  theme (axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("Gráfico de barras: LFA por genotipo y riego")
+library(agricolae) 
+tukey_result \<- HSD.test(modelo, "riego", group=TRUE) print(tukey_result) plot(tukey_result) tukey_result \<- HSD.test(modelo, "geno", group=TRUE) print(tukey_result) tukey_result \<- HSD.test(modelo, c("riego", "geno"), group=TRUE) print(tukey_result) plot(tukey_result) str(tukey_result) tukey_result
 
+grupos \<- tukey_result str(grupos) library(ggplot2) library(ggplot) grupos \<- tukey_result\$groups %\>% rownames_to_column("tratamientos") %\>% separate(tratamientos, into = c("geno","riego"),sep = ":") str(grupos) ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) + geom_bar(stat = "identity", position = "dodge", color ="black") + labs (x = "Genotipo", y = "LFA", fi11 = "Riego") + theme_minimal()+ theme (axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("Gráfico de barras: LFA por genotipo y riego")
