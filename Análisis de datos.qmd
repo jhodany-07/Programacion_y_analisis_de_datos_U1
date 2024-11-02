@@ -1,5 +1,5 @@
 ---
-title: "Análisis de Datos"
+title: "análisis de datos"
 author: "Parejas_G_Jhodany"
 format: html
 editor: visual
