@@ -186,6 +186,7 @@ fb %>%
                , scale = TRUE
                ,lm = TRUE
                )
+
 ```
 ## Análisis de Componentes Principales (PCA)
 ```{r}
@@ -208,4 +209,87 @@ list(p1, p2) %>%
   plot_grid(plotlist = ., nrow = 1)
 
 ```
+## BoxPLot
+```{r}
+library(ggplot2)
+
+t1 <- fb %>%
+  ggplot(aes(x = geno, y = hi, fill = riego)) +
+  geom_boxplot() +
+  labs(
+    x = "Genotipos",
+    y = "Índice de cosecha",
+    fill = "Tratamiento",
+    title = "Eficiencia del uso de agua en papa",
+    subtitle = "Add your subtitle here",
+    caption = "Below plot"
+  ) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 1))
+t1
+```
+## Scater plot
+```{r}
+library(ggplot2)
+library(dplyr)
+
+t2 <- fb %>%
+  ggplot(aes(x = twue, y = hi, color = riego)) +
+  geom_point() + 
+  geom_smooth() + 
+  labs(
+    x = "Eficiencia de uso de agua en papa",
+    y = "Índice de cosecha",
+    fill = "Tratamientos",
+    title = "Eficiencia de uso de agua en papa",
+    subtitle = "Índice de cosecha vs Eficiencia de uso de agua de tubérculo",
+    caption = "n = 150"
+  ) +
+  theme_bw()
+t2
+```
+## Modelo resumido 
+```{r}
+library(ggplot2)
+t3 <- grupos  %>% 
+  ggplot(data = .
+         , aes(x = geno, y = lfa, fill = riego)) +
+  geom_col(position = position_dodge2(preserve = "single"))
+t3
+
+```
+```{r}
+library(psych)
+library(gridGraphics)
+
+p4 <- function(){
+  fb %>% 
+  select_if(is.numeric) %>% 
+  dplyr::select(!c("block")) %>% 
+  pairs.panels(x = .
+               , hist.col="red"
+               , pch = 21
+               , stars = TRUE
+               , scale = FALSE
+               , lm = TRUE
+               ) 
+}
+
+p4
+```
+
+# Imagenes in grids
+```{r}
+library(cowplot)
+
+plot <- list(t1, t2, t3, p4) %>% plot_grid(plotlist = ., ncol = 2,labels = "auto")
+
+plot
+```
+```{r}
+ggsave2(filename = "plot_o1.jpg", units = "cm",width = 20, height = 20)
+
+include_graphics ("plot_01.jpgQ2")
+```
+
 
